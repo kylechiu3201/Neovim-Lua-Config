@@ -313,6 +313,24 @@ local plugins = {
             }
         end,
     },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "wombat",
+                },
+            })
+            vim.o.showmode = false
+        end
+    },
+    --[[ {
+        "yorickpeterse/nvim-pqf",
+        config = function()
+            require("pqf").setup({})
+        end,
+    }, ]]
 }
 
 -- only enable UI plugins if we're not in VSCode environment
