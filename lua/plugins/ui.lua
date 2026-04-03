@@ -93,7 +93,10 @@ local function add_labels(bufnr)
         end
     end
 
+    local save_notify = vim.notify
+    vim.notify = function() end
     require("resolve").detect_conflicts()
+    vim.notify = save_notify
 end
 
 -- Re-adds the git conflict marker labels after any buffer changes
