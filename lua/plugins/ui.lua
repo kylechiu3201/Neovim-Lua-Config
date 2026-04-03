@@ -49,7 +49,9 @@ vim.api.nvim_create_autocmd(
 
 
 
-return {
+local should_enable_in_terminal = vim.g.vscode == nil
+
+local plugins = {
     -- color theme
     {
         "Mofiqul/vscode.nvim",
@@ -176,3 +178,10 @@ return {
         opts = {},
     },
 }
+
+-- only enable UI plugins if we're not in VSCode environment
+for _, plugin in ipairs(plugins) do
+    plugin.enabled = should_enable_in_terminal
+end
+
+return plugins
