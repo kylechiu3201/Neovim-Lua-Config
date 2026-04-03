@@ -42,3 +42,6 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { desc="Yank current line to clipboard
 -- delete without corrupting current yank
 vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d", { desc="Delete without corrupting yank" })
 vim.keymap.set({ "n", "v" }, "<leader>D", "\"_D", { desc="Delete line without corrupting yank" })
+
+-- visual select last paste
+vim.keymap.set("n", "<leader>v", "`[v`]", { desc="Visual select the last paste" })
