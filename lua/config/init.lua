@@ -1,12 +1,12 @@
 -- load general keymaps and option settings
-require("nvim_files.general_keymaps")
-require("nvim_files.options")
+require("config.general_keymaps")
+require("config.options")
 
 -- load specific keymaps depending on dev environment
 if vim.g.vscode then
-    require("nvim_files.vscode_keymaps")
+    require("config.vscode_keymaps")
 else
-    require("nvim_files.terminal_keymaps")
+    require("config.terminal_keymaps")
 end
 
 local autocmd = vim.api.nvim_create_autocmd

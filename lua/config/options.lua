@@ -36,8 +36,8 @@ vim.opt.wrap = false
 vim.opt.undofile = true
 vim.opt.undodir = os.getenv("HOME") .. "/.nvim/undodir"
 
--- disable search highlighting after search
-vim.opt.hlsearch = false
+-- disable search highlighting completely
+-- vim.opt.hlsearch = false
 -- shows search matches as you type
 vim.opt.incsearch = true
 
