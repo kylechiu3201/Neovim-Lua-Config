@@ -2,8 +2,8 @@
 vim.g.mapleader = " "
 
 -- typical beginning/end of line movement
-vim.keymap.set("n", "H", "^")
-vim.keymap.set("n", "L", "$")
+vim.keymap.set({ "n", "v" }, "H", "^")
+vim.keymap.set({ "n", "v" }, "L", "$")
 
 -- faster escape
 vim.keymap.set("i", "jk", "<Esc>")

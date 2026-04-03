@@ -13,7 +13,6 @@ local function add_labels(bufnr)
         if line:match("^<<<<<<<") then
             vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
                 virt_text = {
-                    -- { "← OURS  ", "ConflictOurs" },
                     { "← OURS  ", "ResolveOursMarker" },
                 },
                 virt_text_pos = "right_align",
@@ -21,7 +20,6 @@ local function add_labels(bufnr)
         elseif line:match("^>>>>>>>") then
             vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
                 virt_text = {
-                    -- { "← THEIRS", "ConflictTheirs" },
                     { "← THEIRS", "ResolveTheirsMarker" },
                 },
                 virt_text_pos = "right_align",
@@ -47,6 +45,55 @@ vim.api.nvim_create_autocmd(
     }
 )
 
+-- commands for toggling shade.nvim, we assume by default it is off (lazy = true)
+local shade_active = false
+local initialized = false
+
+local function shade_silent_toggle()
+    local save_print = print
+    print = function() end
+    require("shade").toggle()
+    print = save_print
+end
+
+vim.api.nvim_create_user_command("ShadeOn", function()
+    local shade = require("shade")
+
+    if not initialized then
+        vim.schedule(function()
+            shade_silent_toggle()
+            shade_silent_toggle()
+            shade_active = true
+            initialized = true
+        end)
+        return
+    end
+
+    if not shade_active then
+        shade_silent_toggle()
+        shade_active = true
+    end
+end, {})
+
+vim.api.nvim_create_user_command("ShadeOff", function()
+    local shade = require("shade")
+
+    if shade_active then
+        shade_silent_toggle()
+        shade_active = false
+    end
+end, {})
+
+vim.api.nvim_create_user_command("ShadeToggle", function()
+    local shade = require("shade")
+
+    if shade_active then
+        vim.cmd("ShadeOff")
+    else
+        vim.cmd("ShadeOn")
+    end
+end, {})
+
 
 
 local should_enable_in_terminal = vim.g.vscode == nil
@@ -70,6 +117,7 @@ local plugins = {
                 },
                 group_overrides = {
                     Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+                    CursorLine = { bg = "#353535" },
                 }
             })
             vim.cmd.colorscheme "vscode"
@@ -97,9 +145,11 @@ local plugins = {
     -- darkens non-focused splits
     {
         "sunjon/shade.nvim",
+        lazy = true,
         config = function()
             require("shade").setup({
                 overlay_opacity = 25,
+                exclude_filetypes = { "neominimap" },
             })
         end,
     },
@@ -176,6 +226,60 @@ local plugins = {
         "spacedentist/resolve.nvim",
         event = { "BufReadPre", "BufNewFile" },
         opts = {},
+    },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        lazy = false,
+        build = ':TSUpdate'
+    },
+    ---minimap UI
+    {
+        "Isrothy/neominimap.nvim",
+        version = "v3.x.x",
+        lazy = false, -- NOTE: NO NEED to Lazy load
+        -- Optional. You can also set your own keybindings
+        -- NOTE: In order to have compatibility with shade.nvim, Neominimap can only be on if shade.nvim is off and vice versa
+        keys = {
+        -- Global Minimap Controls
+        { "<leader>nm", "<cmd>Neominimap Toggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle global minimap" },
+        { "<leader>no", "<cmd>Neominimap Enable<cr><cmd>ShadeOff<cr>", desc = "Enable global minimap" },
+        { "<leader>nc", "<cmd>Neominimap Disable<cr><cmd>ShadeOn<cr>", desc = "Disable global minimap" },
+        { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
+
+        -- Window-Specific Minimap Controls
+        { "<leader>nwt", "<cmd>Neominimap WinToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current window" },
+        { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
+        { "<leader>nwo", "<cmd>Neominimap WinEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current window" },
+        { "<leader>nwc", "<cmd>Neominimap WinDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current window" },
+
+        -- Tab-Specific Minimap Controls
+        { "<leader>ntt", "<cmd>Neominimap TabToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current tab" },
+        { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
+        { "<leader>nto", "<cmd>Neominimap TabEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current tab" },
+        { "<leader>ntc", "<cmd>Neominimap TabDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current tab" },
+
+        -- Buffer-Specific Minimap Controls
+        { "<leader>nbt", "<cmd>Neominimap BufToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current buffer" },
+        { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
+        { "<leader>nbo", "<cmd>Neominimap BufEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current buffer" },
+        { "<leader>nbc", "<cmd>Neominimap BufDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current buffer" },
+
+        ---Focus Controls
+        { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
+        { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
+        { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+        },
+        init = function()
+            -- The following options are recommended when layout == "float"
+            vim.opt.wrap = false
+            vim.opt.sidescrolloff = 36 -- Set a large value
+
+            --- Put your configuration here
+            ---@type Neominimap.UserConfig
+            vim.g.neominimap = {
+                auto_enable = true,
+            }
+        end,
     },
 }
 
