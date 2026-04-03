@@ -321,8 +321,42 @@ local plugins = {
                 options = {
                     theme = "wombat",
                 },
+                sections = {
+                    lualine_a = {
+                        {
+                            "mode",
+                            -- remove bold for mode text
+                            -- color = { gui = nil },
+                        }
+                    }
+                }
             })
             vim.o.showmode = false
+        end
+    },
+    {
+        "ramilito/winbar.nvim",
+        event = "VimEnter", -- Alternatively, BufReadPre if we don't care about the empty file when starting with 'nvim'
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("winbar").setup({
+                -- your configuration comes here, for example:
+                icons = true,
+                diagnostics = true,
+                buf_modified = true,
+                -- buf_modified_symbol = "M",
+                buf_modified_symbol = "●",
+                background_color = "WinBarNC",
+                -- background_color = "#141415",
+                -- background_color = "Statusline",
+                dim_inactive = {
+                    enabled = false,
+                    highlight = "WinBarNC",
+                    icons = true, -- whether to dim the icons
+                    name = true, -- whether to dim the name
+                },
+                exclude_if = nil, -- set to a function that returns true/false
+            })
         end
     },
     --[[ {
