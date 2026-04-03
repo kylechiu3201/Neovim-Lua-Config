@@ -7,6 +7,13 @@ local function shade_silent_toggle()
     print = function() end
     require("shade").toggle()
     print = save_print
+
+    vim.schedule(function()
+        -- creates user-defined event to trigger git resolve label redraw
+        vim.api.nvim_exec_autocmds("User", {
+            pattern = "ShadeToggled",
+        })
+    end)
 end
 
 vim.api.nvim_create_user_command("ShadeOn", function()
@@ -107,6 +114,14 @@ vim.api.nvim_create_autocmd(
         end,
     }
 )
+
+-- consumes user-defined event to trigger git resolve label redraw
+vim.api.nvim_create_autocmd("User", {
+    pattern = "ShadeToggled",
+    callback = function(args)
+        add_labels(args.buf)
+    end
+})
 
 
 
