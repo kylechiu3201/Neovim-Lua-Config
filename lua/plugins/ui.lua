@@ -71,4 +71,34 @@ return {
         "nvim-tree/nvim-web-devicons",
         opts = {},
     },
+    -- undo tree
+    {
+        "jiaoshijie/undotree",
+        opts = {
+            -- your options
+        },
+        keys = { -- load the plugin only when using it's keybinding:
+            { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>", desc="Toggles the undo tree", },
+        },
+    },
+    -- keymap helper
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- win = {
+                -- height = { min=10, max=20 },
+                -- width = { min=20, max=35 },
+            -- },
+        },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+    },
 }

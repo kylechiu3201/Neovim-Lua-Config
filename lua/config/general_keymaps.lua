@@ -30,6 +30,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 -- NOTE THAT BEHAVIOR IS DIFFERENT FOR NORMAL VS VISUAL MODE
 -- paste from clipboard
+-- TODO: Maybe find better keymap here later
 vim.keymap.set("n", "<leader>p", "\"+p", { desc="Paste from clipboard" })
 -- pastes without corrupting current yank
 vim.keymap.set("x", "<leader>p", [["_dP]], { desc="Paste without corrupting yank" })

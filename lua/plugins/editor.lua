@@ -1,3 +1,54 @@
+-- setup for adding "Ours" and "Theirs" to git conflict markers
+local ns = vim.api.nvim_create_namespace("conflict_labels")
+
+local function add_labels(bufnr)
+    if not vim.api.nvim_buf_is_valid(bufnr) then return end
+
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+    -- Clear previous labels
+    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+
+    for i, line in ipairs(lines) do
+        if line:match("^<<<<<<<") then
+            vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
+                virt_text = {
+                    -- { "← OURS  ", "ConflictOurs" },
+                    { "← OURS  ", "ResolveOursMarker" },
+                },
+                virt_text_pos = "right_align",
+            })
+        elseif line:match("^>>>>>>>") then
+            vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
+                virt_text = {
+                    -- { "← THEIRS", "ConflictTheirs" },
+                    { "← THEIRS", "ResolveTheirsMarker" },
+                },
+                virt_text_pos = "right_align",
+            })
+        end
+    end
+end
+
+-- Re-adds the git conflict marker labels after any buffer changes
+vim.api.nvim_create_autocmd(
+    {
+        "BufReadPost",
+        "BufNewFile",
+        "BufEnter",
+        "TextChanged",
+        "TextChangedI",
+        "BufWritePost",
+    },
+    {
+        callback = function(args)
+            add_labels(args.buf)
+        end,
+    }
+)
+
+
+
 return {
     -- auto pairing for [{("")}], etc.
     {
@@ -22,26 +73,12 @@ return {
             -- GitSignsTopdelete
             -- GitSignsChangedelete
             -- GitSignsUntracked
-        end
+        end,
     },
-    -- keymap helper
+    -- highlights git merge conflict markers
     {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        opts = {
-            -- win = {
-                -- height = { min=10, max=20 },
-                -- width = { min=20, max=35 },
-            -- },
-        },
-        keys = {
-            {
-                "<leader>?",
-                function()
-                    require("which-key").show({ global = false })
-                end,
-                desc = "Buffer Local Keymaps (which-key)",
-            },
-        },
+        "spacedentist/resolve.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        opts = {},
     },
 }
