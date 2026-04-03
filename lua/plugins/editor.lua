@@ -1,3 +1,5 @@
+-- TODO: move all of the visual plugins/code to a terminal_only plugins file
+
 -- setup for adding "Ours" and "Theirs" to git conflict markers
 local ns = vim.api.nvim_create_namespace("conflict_labels")
 
