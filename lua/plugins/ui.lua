@@ -485,8 +485,32 @@ local plugins = {
             require("telescope").load_extension "frecency"
         end,
     },
-    -- colorizes hex colors like #558817
     {
+        "s1n7ax/nvim-window-picker",
+        name = "window-picker",
+        event = "VeryLazy",
+        version = "2.*",
+        config = function()
+            require"window-picker".setup({
+                picker_config = {
+                    floating_big_letter = {
+                        font = "ansi-shadow",
+                    },
+                },
+            })
+            vim.keymap.set("n", "<leader>w", function()
+                local picker = require("window-picker")
+                local win_id = picker.pick_window({ hint="floating-big-letter" })
+                if win_id then
+                    vim.api.nvim_set_current_win(win_id)
+                end
+            end, { desc="Launch window picker" })
+        end,
+    },
+    -- colorizes hex colors like #558817
+    -- TODO: deprecated
+
+    --[[ {
         "norcalli/nvim-colorizer.lua",
         config = function()
             require("colorizer").setup({})
@@ -496,7 +520,7 @@ local plugins = {
                 end,
             })
         end
-    }
+    } ]]
     --[[ {
         "yorickpeterse/nvim-pqf",
         config = function()
