@@ -47,6 +47,27 @@ return {
             require("nvim-comment-frame").setup()
         end
     },
+    -- resetore last cursor position since file close
+    {
+        "nxhung2304/lastplace.nvim",
+        config = function()
+            require("lastplace").setup({
+            -- your configuration here
+            })
+        end,
+    },
+    -- surrounds objects with things like "", (), [], {}, '', <tag></tag>, etc.
+    {
+        "kylechui/nvim-surround",
+        version = "^4.0.0", -- Use for stability; omit to use `main` branch for the latest features
+        event = "VeryLazy",
+        -- Optional: See `:h nvim-surround.configuration` and `:h nvim-surround.setup` for details
+        config = function()
+            -- require("nvim-surround").setup({
+            --     -- Put your configuration here
+            -- })
+        end,
+    },
     --[[ {
         "https://codeberg.org/andyg/leap.nvim",
         config = function()

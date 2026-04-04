@@ -265,6 +265,25 @@ local plugins = {
         lazy = false,
         build = ':TSUpdate'
     },
+    -- additional treesitter for text objects
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        branch = "main",
+        init = function()
+            -- Disable entire built-in ftplugin mappings to avoid conflicts.
+            -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
+            vim.g.no_plugin_maps = true
+
+            -- Or, disable per filetype (add as you like)
+            -- vim.g.no_python_maps = true
+            -- vim.g.no_ruby_maps = true
+            -- vim.g.no_rust_maps = true
+            -- vim.g.no_go_maps = true
+        end,
+        config = function()
+            -- put your config here
+        end,
+    },
     ---minimap UI
     {
         "Isrothy/neominimap.nvim",
@@ -507,26 +526,13 @@ local plugins = {
             end, { desc="Launch window picker" })
         end,
     },
-    -- colorizes hex colors like #558817
-    -- TODO: deprecated
-
-    --[[ {
-        "norcalli/nvim-colorizer.lua",
+    -- highlights occurrences of the word under the cursor
+    {
+        "RRethy/vim-illuminate",
         config = function()
-            require("colorizer").setup({})
-            vim.api.nvim_create_autocmd("BufReadPost", {
-                callback = function()
-                    vim.cmd("ColorizerAttachToBuffer")
-                end,
-            })
-        end
-    } ]]
-    --[[ {
-        "yorickpeterse/nvim-pqf",
-        config = function()
-            require("pqf").setup({})
+            require("illuminate").configure({})
         end,
-    }, ]]
+    },
 }
 
 -- only enable UI plugins if we're not in VSCode environment
