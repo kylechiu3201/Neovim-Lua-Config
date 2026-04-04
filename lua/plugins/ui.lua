@@ -390,7 +390,7 @@ local plugins = {
                     },
                     lualine_c = {
                         char_info_under_cursor
-                    }
+                    },
                 }
             })
             vim.o.showmode = false
@@ -461,24 +461,6 @@ local plugins = {
         "RRethy/vim-illuminate",
         config = function()
             require("illuminate").configure({})
-        end,
-    },
-    {
-        "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        event = "BufEnter",
-        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
-        init = function()
-            require("goto-preview").setup({
-                default_mappings = true,
-            })
-        end
-    },
-    {
-        "hedyhli/outline.nvim",
-        config = function()
-            vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
-            require("outline").setup({})
         end,
     },
 }

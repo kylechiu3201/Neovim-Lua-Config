@@ -46,6 +46,16 @@ return {
         },
         config = function(_, opts)
             require("mason-lspconfig").setup(opts)
+            -- stops lua_ls from complaining about `vim` not being a global variable
+            vim.lsp.config("lua_ls", {
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { "vim" },
+                        }
+                    }
+                }
+            })
         end,
     },
     -- additional list of LSPs, linters, and formatters
@@ -128,6 +138,43 @@ return {
         "zapling/mason-conform.nvim",
         config = function()
             require("mason-conform").setup({})
+        end
+    },
+    {
+        "rmagatti/goto-preview",
+        dependencies = { "rmagatti/logger.nvim" },
+        event = "BufEnter",
+        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+        init = function()
+            require("goto-preview").setup({
+                default_mappings = true,
+            })
+        end
+    },
+    {
+        "hedyhli/outline.nvim",
+        config = function()
+            vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
+            require("outline").setup({})
+        end,
+    },
+    -- shows number of references, etc.
+    {
+        'Wansmer/symbol-usage.nvim',
+        event = 'BufReadPre', -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+        config = function()
+            require('symbol-usage').setup({
+                hl = { link = "NonText" },
+                kinds = {
+                    vim.lsp.protocol.SymbolKind.Function,
+                    vim.lsp.protocol.SymbolKind.Method,
+                    vim.lsp.protocol.SymbolKind.Class,
+                    vim.lsp.protocol.SymbolKind.Struct,
+                    vim.lsp.protocol.SymbolKind.Module,
+                    vim.lsp.protocol.SymbolKind.Interface,
+                },
+                vt_position = "end_of_line",
+            })
         end
     },
 }
