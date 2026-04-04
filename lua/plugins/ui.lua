@@ -343,7 +343,7 @@ local plugins = {
                 local line = vim.api.nvim_get_current_line()
 
                 if #line == 0 then
-                    return "Char: N/A"
+                    return string.format(": ASCII N/A  ")
                 end
 
                 -- Convert byte index → UTF-8 character index
@@ -354,7 +354,7 @@ local plugins = {
                 local char = vim.fn.strcharpart(line, char_idx, 1)
 
                 if char == "" then
-                    return "Char: N/A"
+                    return string.format(": ASCII N/A  ")
                 end
 
                 -- Get Unicode codepoint
@@ -362,10 +362,15 @@ local plugins = {
 
                 -- Format output
                 if codepoint < 128 then
-                    if char == " " then char = "(Space)" end
-                    return string.format("Char: %s (ASCII %d)", char, codepoint)
+                    -- if char == " " then char = "(Space)" end
+                    -- local extra_space = ""
+                    -- if codepoint < 100 then extra_space = " " end
+                    -- if codepoint < 10 then extra_space = "  " end
+                    return string.format("%8s: ASCII %3d  ", char == " " and "(Space)" or char, codepoint)
+                    -- return string.format("%s: ASCII %d" .. extra_space, char, codepoint)
                 else
-                    return string.format("Char: %s (U+%04X)", char, codepoint)
+                    -- return string.format("Char: %s (U+%04X)", char, codepoint)
+                    return string.format("%s: U+%04X  ", char, codepoint)
                 end
             end
 
@@ -388,7 +393,7 @@ local plugins = {
                             -- color = { gui = nil },
                         }
                     },
-                    lualine_c = {
+                    lualine_x = {
                         char_info_under_cursor
                     },
                 }
