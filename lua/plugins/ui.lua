@@ -530,6 +530,15 @@ local plugins = {
             })
         end,
     },
+    -- Git diff view
+    {
+        "sindrets/diffview.nvim",        -- optional
+        config = function()
+            require("diffview").setup({})
+        end,
+        vim.keymap.set("n", "<leader>go", ":DiffviewOpen<CR>", { desc="Open Diffview" }),
+        vim.keymap.set("n", "<leader>gc", ":DiffviewClose<CR>", { desc="Close Diffview" }),
+    },
     -- Git UI
     {
         "NeogitOrg/neogit",
@@ -545,7 +554,36 @@ local plugins = {
         keys = {
             { "<leader>gg", "<cmd>Neogit<cr>", desc = "Show Neogit UI" }
         },
+    },
+    {
+        "dstein64/nvim-scrollview",
+        opts = {},
+        config=function()
+            require("scrollview").setup({
+                signs_on_startup = {
+                    "diagnostics",
+                    "git",
+                    "marks",
+                    "keywords",
+                    "search",
+                },
+                visibility = "overflow",
+
+                diagnostics_error_symbol = "",
+                diagnostics_warn_symbol   = "",
+                diagnostics_info_symbol   = "",
+                diagnostics_hint_symbol   = "",
+            })
+            vim.cmd("highlight! ScrollView guifg=#b0b8c4 guibg=#555b66")
+        end
     }
+    --[[ {
+        "karb94/neoscroll.nvim",
+        opts = {},
+        config = function()
+            require("neoscroll").setup({})
+        end
+    } ]]
 }
 
 -- only enable UI plugins if we're not in VSCode environment

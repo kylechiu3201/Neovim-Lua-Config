@@ -116,6 +116,10 @@ return {
             require("mini.ai").setup({})
         end,
     },
+    -- Git integration
+    {
+        "tpope/vim-fugitive",
+    },
     --[[ {
         "https://codeberg.org/andyg/leap.nvim",
         config = function()
