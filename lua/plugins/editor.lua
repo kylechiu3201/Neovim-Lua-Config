@@ -68,6 +68,54 @@ return {
             -- })
         end,
     },
+    -- lua with lazy.nvim
+    {
+        "max397574/better-escape.nvim",
+        config = function()
+            vim.o.timeoutlen = 100
+            require("better_escape").setup({
+                timeout = 100, -- milliseconds, doesn't seem to work though
+                default_mappings = false,
+                mappings = {
+                    i = {
+                        j = {
+                            k = "<Esc>",
+                            -- j = "<Esc>",
+                        },
+                        k = {
+                            j = "<Esc>",
+                        },
+                    },
+                    c = {
+                        j = {
+                            k = "<Esc>",
+                            -- j = "<Esc>",
+                        },
+                        k = {
+                            j = "<Esc>",
+                        },
+                    },
+                    s = {
+                        j = {
+                            k = "<Esc>",
+                            -- j = "<Esc>",
+                        },
+                        k = {
+                            j = "<Esc>",
+                        },
+                    },
+                }
+            })
+        end,
+    },
+    -- more all/inner objects (e.g. *asdf*, yi*)
+    {
+        "nvim-mini/mini.nvim",
+        version = "*",
+        config = function()
+            require("mini.ai").setup({})
+        end,
+    },
     --[[ {
         "https://codeberg.org/andyg/leap.nvim",
         config = function()

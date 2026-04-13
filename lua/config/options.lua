@@ -21,6 +21,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 -- disables GUI cursor styling
 vim.opt.guicursor = ""
@@ -45,7 +46,7 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 -- start cursor scrolling further away from edge
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 3
 
 -- Puts extra column space on left to make space for markings like git change markings or LSP diagnostic markings
 vim.opt.signcolumn = "yes"

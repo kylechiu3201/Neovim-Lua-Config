@@ -17,7 +17,7 @@ local function shade_silent_toggle()
 end
 
 vim.api.nvim_create_user_command("ShadeOn", function()
-    local shade = require("shade")
+    require("shade")
 
     if not initialized then
         vim.schedule(function()
@@ -36,7 +36,7 @@ vim.api.nvim_create_user_command("ShadeOn", function()
 end, {})
 
 vim.api.nvim_create_user_command("ShadeOff", function()
-    local shade = require("shade")
+    require("shade")
 
     if shade_active then
         shade_silent_toggle()
@@ -45,7 +45,7 @@ vim.api.nvim_create_user_command("ShadeOff", function()
 end, {})
 
 vim.api.nvim_create_user_command("ShadeToggle", function()
-    local shade = require("shade")
+    require("shade")
 
     if shade_active then
         vim.cmd("ShadeOff")
@@ -163,12 +163,23 @@ local plugins = {
         ---@type ibl.config
         opts = {},
     },
+    -- guess indentation style
+    {
+        "nmac427/guess-indent.nvim",
+        config = function()
+            require("guess-indent").setup({})
+        end
+    },
     -- notification UI
     {
         "rcarriga/nvim-notify",
         config = function()
             vim.notify = require("notify")
-            vim.notify.setup({
+            --[[ vim.notify.setup({
+                timeout = 500,
+                background_colour = "#000000",
+            }) ]]
+            require("notify").setup({
                 timeout = 500,
                 background_colour = "#000000",
             })
@@ -293,10 +304,10 @@ local plugins = {
         -- NOTE: In order to have compatibility with shade.nvim, Neominimap can only be on if shade.nvim is off and vice versa
         keys = {
         -- Global Minimap Controls
-        { "<leader>nm", "<cmd>Neominimap Toggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle global minimap" },
-        { "<leader>no", "<cmd>Neominimap Enable<cr><cmd>ShadeOff<cr>", desc = "Enable global minimap" },
-        { "<leader>nc", "<cmd>Neominimap Disable<cr><cmd>ShadeOn<cr>", desc = "Disable global minimap" },
-        { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
+        { "<leader>mm", "<cmd>Neominimap Toggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle global minimap" },
+        { "<leader>mo", "<cmd>Neominimap Enable<cr><cmd>ShadeOff<cr>", desc = "Enable global minimap" },
+        { "<leader>mc", "<cmd>Neominimap Disable<cr><cmd>ShadeOn<cr>", desc = "Disable global minimap" },
+        { "<leader>mr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
 
         -- Window-Specific Minimap Controls
         { "<leader>nwt", "<cmd>Neominimap WinToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current window" },
@@ -327,7 +338,7 @@ local plugins = {
             vim.opt.sidescrolloff = 36 -- Set a large value
 
             --- Put your configuration here
-            ---@type Neominimap.UserConfig
+            ---@type Neominimap.UserConfig 
             vim.g.neominimap = {
                 auto_enable = true,
             }
@@ -339,7 +350,7 @@ local plugins = {
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             local function char_info_under_cursor()
-                local _, col = unpack(vim.api.nvim_win_get_cursor(0))
+                local _, col = table.unpack(vim.api.nvim_win_get_cursor(0))
                 local line = vim.api.nvim_get_current_line()
 
                 if #line == 0 then

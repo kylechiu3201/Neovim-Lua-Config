@@ -131,6 +131,8 @@ return {
                     typescript = { "prettierd" },
                 },
             })
+            -- TODO: fix behaviors with formatting and stuff like tab vs space
+            vim.keymap.set("n", "<leader>af", ":lua require(\"conform\").format({ async = false, lsp_fallback = true, })<CR>", { silent = true, desc="Auto-format the current file" })
         end,
     },
     -- auto-install for formatters
@@ -176,5 +178,76 @@ return {
                 vt_position = "end_of_line",
             })
         end
+    },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            vim.diagnostic.config({
+                underline = true,
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = "",
+                        [vim.diagnostic.severity.WARN] = "",
+                        [vim.diagnostic.severity.HINT] = "",
+                        [vim.diagnostic.severity.INFO] = "",
+                    },
+                },
+            })
+            require("tiny-inline-diagnostic").setup({
+                -- transparent_bg = true,
+                -- transparent_cursorline = true,
+                options = {
+                    preset = "powerline",
+                    -- overflow = {
+                    --     mode = "wrap",
+                    -- }
+                    -- break_line = {
+                    --     enabled = true,
+                    --     after = 10,
+                    -- }
+                },
+            })
+            vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+        end,
+    },
+    -- show diagnostics window for errors/warnings in the entire file
+    {
+        "folke/trouble.nvim",
+        opts = {}, -- for default options, refer to the configuration section for custom setup.
+        cmd = "Trouble",
+        keys = {
+            {
+                "<leader>xx",
+                "<cmd>Trouble diagnostics toggle<cr>",
+                desc = "Diagnostics (Trouble)",
+            },
+            {
+                "<leader>xX",
+                "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+                desc = "Buffer Diagnostics (Trouble)",
+            },
+            {
+                "<leader>cs",
+                "<cmd>Trouble symbols toggle focus=false<cr>",
+                desc = "Symbols (Trouble)",
+            },
+            {
+                "<leader>cl",
+                "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+                desc = "LSP Definitions / references / ... (Trouble)",
+            },
+            {
+                "<leader>xl",
+                "<cmd>Trouble loclist toggle<cr>",
+                desc = "Location List (Trouble)",
+            },
+            {
+                "<leader>xq",
+                "<cmd>Trouble qflist toggle<cr>",
+                desc = "Quickfix List (Trouble)",
+            },
+        },
     },
 }
