@@ -479,11 +479,78 @@ local plugins = {
             require("illuminate").configure({})
         end,
     },
+    -- shows context in UI (e.g. file -> class name -> function name)
+    {
+        "utilyre/barbecue.nvim",
+        name = "barbecue",
+        version = "*",
+        dependencies = {
+            "SmiteshP/nvim-navic",
+            "nvim-tree/nvim-web-devicons", -- optional dependency
+        },
+        opts = {
+        -- configurations go here
+        },
+    },
+    -- file tree
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons", -- optional, but recommended
+        },
+        lazy = false, -- neo-tree will lazily load itself
+        vim.keymap.set("n", "<leader>e", function()
+            require("neo-tree.command").execute({
+                toggle = true,
+                dir = vim.loop.cwd(),
+            })
+        end, { desc = "Toggle Neotree" }),
+        config = function()
+            require("neo-tree").setup({
+                default_component_configs = {
+                    git_status = {
+                        -- enabled = true,
+                        enabled = false,
+                        symbols = {
+                            added     = "A",
+                            modified  = "M",
+                            deleted   = "D",
+                            renamed   = "R",
+                            untracked = "?",
+                            ignored   = "I",
+                            unstaged  = "U",
+                            staged    = "S",
+                            conflict  = "C",
+                        },
+                    }
+                },
+            })
+        end,
+    },
+    -- Git UI
+    {
+        "NeogitOrg/neogit",
+        lazy = true,
+        dependencies = {
+            "nvim-lua/plenary.nvim",         -- required
+            "sindrets/diffview.nvim",        -- optional
+            -- For a custom log pager
+            "m00qek/baleia.nvim",            -- optional
+            "nvim-telescope/telescope.nvim", -- optional
+        },
+        cmd = "Neogit",
+        keys = {
+            { "<leader>gg", "<cmd>Neogit<cr>", desc = "Show Neogit UI" }
+        },
+    }
 }
 
 -- only enable UI plugins if we're not in VSCode environment
-for _, plugin in ipairs(plugins) do
-    plugin.enabled = should_enable_in_terminal
-end
+-- for _, plugin in ipairs(plugins) do
+--     plugin.enabled = should_enable_in_terminal
+-- end
 
 return plugins
