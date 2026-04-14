@@ -13,8 +13,12 @@ vim.keymap.set("i", "kj", "<Esc>")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc="Move visual selection up" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc="Move visual selection down" })
 
--- joins the line without moving cursor (corrupts z mark register)
-vim.keymap.set("n", "J", "mzJ`z:delm z<CR>")
+-- joins the line without moving cursor
+vim.keymap.set("n", "J", function()
+    local pos = vim.api.nvim_win_get_cursor(0)
+    vim.cmd("normal! J")
+    vim.api.nvim_win_set_cursor(0, pos)
+end, { desc="Joins the line below without moving the cursor" })
 
 -- scroll with centering
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
