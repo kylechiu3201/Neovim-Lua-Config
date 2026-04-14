@@ -1,84 +1,60 @@
 return {
     -- completion engine
     {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "neovim/nvim-lspconfig",
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/nvim-cmp",
-        },
-        config = function()
-            local cmp = require("cmp")
-            cmp.setup({
-                window = {
-                    -- completion = cmp.config.window.bordered(), -- uncommenting this makes the completion popup match the terminal background
-                    -- documentation = cmp.config.window.bordered(), -- didn't seem to really change anything
-                },
-                mapping = cmp.mapping.preset.insert({
-                    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-e>'] = cmp.mapping.abort(),
-                    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-                }),
-                sources = cmp.config.sources(
-                    {
-                        { name = 'nvim_lsp' },
-                    },
-                    {
-                        { name = 'buffer' },
-                    }
-                )
-            })
-            -- completion for / and ? search
-            cmp.setup.cmdline({ '/', '?' }, {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = 'buffer' }
-                }
-            })
-            -- completion for Neovim command mode
-            cmp.setup.cmdline(':', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources(
-                    {
-                        { name = 'path' }
-                    },
-                    {
-                        { name = 'cmdline' }
-                    }
-                ),
-                matching = { disallow_symbol_nonprefix_matching = false },
-            })
-            -- integration with lspkind
-            local lspkind = require("lspkind")
-            cmp.setup {
-                formatting = {
-                    fields = { 'abbr', 'icon', 'kind', 'menu' },
-                    format = lspkind.cmp_format({
-                        maxwidth = {
-                            -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-                            -- can also be a function to dynamically calculate max width such as
-                            -- menu = function() return math.floor(0.45 * vim.o.columns) end,
-                            menu = 50, -- leading text (labelDetails)
-                            abbr = 50, -- actual suggestion item
-                        },
-                        ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-                        show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+        "saghen/blink.cmp",
+        -- optional: provides snippets for the snippet source
+        dependencies = { "rafamadriz/friendly-snippets" },
 
-                        -- The function below will be called before any actual modifications from lspkind
-                        -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-                        before = function (entry, vim_item)
-                            -- ...
-                            return vim_item
-                        end
-                    })
-                }
-            }
-        end,
+        -- use a release tag to download pre-built binaries
+        version = "1.*",
+        -- AND/OR build from source
+        -- build = "cargo build --release",
+        -- If you use nix, you can build from source with:
+        -- build = "nix run .#build-plugin",
+
+        ---@module "blink.cmp"
+        ---@type blink.cmp.Config
+        opts = {
+            -- "default" (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- "super-tab" for mappings similar to vscode (tab to accept)
+            -- "enter" for enter to accept
+            -- "none" for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            -- keymap = { preset = "default" },
+            -- keymap = { preset = "enter" },
+            keymap = { preset = "super-tab" },
+
+            appearance = {
+                -- "mono" (default) for "Nerd Font Mono" or "normal" for "Nerd Font"
+                -- Adjusts spacing to ensure icons are aligned
+                nerd_font_variant = "mono"
+            },
+
+            -- (Default) Only show the documentation popup when manually triggered
+            -- completion = { documentation = { auto_show = false } },
+            completion = { documentation = { auto_show = true } },
+
+            -- Default list of enabled providers defined so that you can extend it
+            -- elsewhere in your config, without redefining it, due to `opts_extend`
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+
+            -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+            -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+            -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+            --
+            -- See the fuzzy documentation for more information
+            fuzzy = { implementation = "prefer_rust_with_warning" }
+        },
+        opts_extend = { "sources.default" }
     },
     -- shows function definition as you type the function call
     {
@@ -86,31 +62,6 @@ return {
         event = "InsertEnter",
         opts = {},
     },
-    -- nice icons for completion menu
-    {
-        "onsails/lspkind.nvim",
-    },
-    -- {
-    --     "nvim-lua/lsp-status.nvim",
-    --     config = function()
-    --         local lsp_status = require("lsp-status")
-    --         lsp_status.register_progress()
-    --         lsp_status.config({})
-    --     end
-    -- },
-    -- shows errors with virtual text
-    -- {
-    --     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    --     config = function()
-    --         require("lsp_lines").setup({})
-    --         vim.diagnostic.config({
-    --             virtual_text = true,
-    --             virtual_lines = false,
-    --             underline = false,
-    --             signs = true,
-    --         })
-    --     end,
-    -- },
     -- shows lightbulb to indicate possible code action
     -- {
     --     "kosayoda/nvim-lightbulb",

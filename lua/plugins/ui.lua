@@ -530,15 +530,6 @@ local plugins = {
             })
         end,
     },
-    -- Git diff view
-    {
-        "sindrets/diffview.nvim",        -- optional
-        config = function()
-            require("diffview").setup({})
-        end,
-        vim.keymap.set("n", "<leader>go", ":DiffviewOpen<CR>", { desc="Open Diffview" }),
-        vim.keymap.set("n", "<leader>gc", ":DiffviewClose<CR>", { desc="Close Diffview" }),
-    },
     -- Git UI
     {
         "NeogitOrg/neogit",
@@ -576,7 +567,43 @@ local plugins = {
             })
             vim.cmd("highlight! ScrollView guifg=#b0b8c4 guibg=#555b66")
         end
-    }
+    },
+    -- Git UI
+    -- TODO: figure out keymaps
+    {
+        "SuperBo/fugit2.nvim",
+        opts = {
+            width = 70,
+            external_diffview = true, -- tell fugit2 to use diffview.nvim instead of builtin implementation.
+            libgit2_path = "/opt/homebrew/lib/libgit2.dylib",
+        },
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "nvim-lua/plenary.nvim",
+            {
+                "chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+                dependencies = { "stevearc/dressing.nvim" }
+            },
+        },
+        cmd = { "Fugit2", "Fugit2Blame", "Fugit2Diff", "Fugit2Graph", "Fugit2Rebase" },
+        vim.keymap.set("n", "<leader>F", ":Fugit2<CR>", { desc="Toggle Fugit2" })
+    },
+    -- Git diff view
+    -- TODO: figure out how to use this lmao
+    {
+        "sindrets/diffview.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        -- lazy, only load diffview by these commands
+        cmd = {
+        "DiffviewFileHistory", "DiffviewOpen", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewRefresh"
+        },
+        config = function()
+            require("diffview").setup({})
+        end,
+        vim.keymap.set("n", "<leader>go", ":DiffviewOpen<CR>", { desc="Open Diffview" }),
+        vim.keymap.set("n", "<leader>gc", ":DiffviewClose<CR>", { desc="Close Diffview" }),
+    },
     --[[ {
         "karb94/neoscroll.nvim",
         opts = {},

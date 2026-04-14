@@ -143,17 +143,6 @@ return {
         end
     },
     {
-        "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        event = "BufEnter",
-        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
-        init = function()
-            require("goto-preview").setup({
-                default_mappings = true,
-            })
-        end
-    },
-    {
         "hedyhli/outline.nvim",
         config = function()
             vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
@@ -249,5 +238,46 @@ return {
                 desc = "Quickfix List (Trouble)",
             },
         },
+    },
+    -- LSP status notifications
+    {
+        "j-hui/fidget.nvim",
+        version = "*",
+        options = {
+            -- options
+        },
+        config = function()
+            require("telescope").load_extension("fidget")
+            require("fidget").setup({})
+        end
+    },
+    -- multiple LSP UI components
+    -- TODO: figure out keymaps and also if we need goto-preview or not
+    {
+        "nvimdev/lspsaga.nvim",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter", -- optional
+            "nvim-tree/nvim-web-devicons",     -- optional
+        },
+        -- event = "LspAttach",
+        config = function()
+            require("lspsaga").setup({})
+            -- keymaps for goto definition
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
+            vim.keymap.set("n", "<leader>ca", ":Lspsaga code_action<CR>", { desc="Open code action ", silent=true })
+        end,
+    },
+    -- preview functions, references, etc.
+    {
+        "rmagatti/goto-preview",
+        dependencies = { "rmagatti/logger.nvim" },
+        event = "BufEnter",
+        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+        init = function()
+            require("goto-preview").setup({
+                default_mappings = true,
+            })
+        end
     },
 }
