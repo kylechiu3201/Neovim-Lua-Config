@@ -128,7 +128,8 @@ vim.api.nvim_create_autocmd("User", {
 
 
 
-local should_enable_in_terminal = vim.g.vscode == nil
+-- TODO: disable plugins that only work for terminal
+-- local should_enable_in_terminal = vim.g.vscode == nil
 
 local plugins = {
     -- VSCode color theme
@@ -160,6 +161,7 @@ local plugins = {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         ---@module "ibl"
+        ---@diagnostic disable-next-line: undefined-doc-name
         ---@type ibl.config
         opts = {},
     },
@@ -338,6 +340,7 @@ local plugins = {
             vim.opt.sidescrolloff = 36 -- Set a large value
 
             --- Put your configuration here
+            ---@diagnostic disable-next-line: undefined-doc-name
             ---@type Neominimap.UserConfig 
             vim.g.neominimap = {
                 auto_enable = true,
