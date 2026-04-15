@@ -167,5 +167,12 @@ return {
             { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
             { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
         },
+    },
+    -- peek at line numbers
+    {
+        "nacro90/numb.nvim",
+        config = function()
+            require("numb").setup()
+        end,
     }
 }
