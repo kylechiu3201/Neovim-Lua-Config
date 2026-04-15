@@ -30,6 +30,7 @@ return {
         end,
         -- or use the `opts` mechanism built into `lazy.nvim`. It calls
         -- `require('match-up').setup` under the hood
+        ---@diagnostic disable-next-line: undefined-doc-name
         ---@type matchup.Config
         opts = {
             treesitter = {
@@ -120,12 +121,40 @@ return {
     {
         "tpope/vim-fugitive",
     },
-    --[[ {
-        "https://codeberg.org/andyg/leap.nvim",
-        config = function()
-            require("leap").leap { windows = { vim.fn.win_getid() } }
-            vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
-            vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
-        end
-    }, ]]
+    -- fast movements with f, t, and s
+    {
+        "folke/flash.nvim",
+        event = "BufReadPost",
+        ---@diagnostic disable-next-line: undefined-doc-name
+        ---@type Flash.Config
+        opts = {
+            continue = false,
+            modes = {
+                char = {
+                    -- overrides f/t to be multi-line and letter highlighting
+                    enabled = true,
+                    jump_labels = false,
+
+                    -- turns off hl group highlighting for f/t
+                    highlight = {
+                        backdrop = false,
+                    }
+                }
+            },
+            jump = {
+                autojump = true,
+            },
+            -- if you want to turn off the comment hl group from activating for `s`
+            -- highlight = {
+            --     backdrop = false,
+            -- }
+        },
+        keys = {
+            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+            { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+            { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+            { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+        },
+    }
 }
