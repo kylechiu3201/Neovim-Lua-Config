@@ -168,6 +168,7 @@ return {
             })
         end
     },
+    -- shows the actual error/warning text when the cursor is on the line in question
     {
         "rachartier/tiny-inline-diagnostic.nvim",
         event = "VeryLazy",

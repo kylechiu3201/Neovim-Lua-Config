@@ -177,10 +177,6 @@ local plugins = {
         "rcarriga/nvim-notify",
         config = function()
             vim.notify = require("notify")
-            --[[ vim.notify.setup({
-                timeout = 500,
-                background_colour = "#000000",
-            }) ]]
             require("notify").setup({
                 timeout = 500,
                 background_colour = "#000000",
@@ -305,34 +301,34 @@ local plugins = {
         -- Optional. You can also set your own keybindings
         -- NOTE: In order to have compatibility with shade.nvim, Neominimap can only be on if shade.nvim is off and vice versa
         keys = {
-        -- Global Minimap Controls
-        { "<leader>mm", "<cmd>Neominimap Toggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle global minimap" },
-        { "<leader>mo", "<cmd>Neominimap Enable<cr><cmd>ShadeOff<cr>", desc = "Enable global minimap" },
-        { "<leader>mc", "<cmd>Neominimap Disable<cr><cmd>ShadeOn<cr>", desc = "Disable global minimap" },
-        { "<leader>mr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
+            -- Global Minimap Controls
+            { "<leader>mm", "<cmd>Neominimap Toggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle global minimap" },
+            { "<leader>mo", "<cmd>Neominimap Enable<cr><cmd>ShadeOff<cr>", desc = "Enable global minimap" },
+            { "<leader>mc", "<cmd>Neominimap Disable<cr><cmd>ShadeOn<cr>", desc = "Disable global minimap" },
+            { "<leader>mr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
 
-        -- Window-Specific Minimap Controls
-        { "<leader>nwt", "<cmd>Neominimap WinToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current window" },
-        { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
-        { "<leader>nwo", "<cmd>Neominimap WinEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current window" },
-        { "<leader>nwc", "<cmd>Neominimap WinDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current window" },
+            -- Window-Specific Minimap Controls
+            { "<leader>nwt", "<cmd>Neominimap WinToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current window" },
+            { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
+            { "<leader>nwo", "<cmd>Neominimap WinEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current window" },
+            { "<leader>nwc", "<cmd>Neominimap WinDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current window" },
 
-        -- Tab-Specific Minimap Controls
-        { "<leader>ntt", "<cmd>Neominimap TabToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current tab" },
-        { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
-        { "<leader>nto", "<cmd>Neominimap TabEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current tab" },
-        { "<leader>ntc", "<cmd>Neominimap TabDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current tab" },
+            -- Tab-Specific Minimap Controls
+            { "<leader>ntt", "<cmd>Neominimap TabToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current tab" },
+            { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
+            { "<leader>nto", "<cmd>Neominimap TabEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current tab" },
+            { "<leader>ntc", "<cmd>Neominimap TabDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current tab" },
 
-        -- Buffer-Specific Minimap Controls
-        { "<leader>nbt", "<cmd>Neominimap BufToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current buffer" },
-        { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
-        { "<leader>nbo", "<cmd>Neominimap BufEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current buffer" },
-        { "<leader>nbc", "<cmd>Neominimap BufDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current buffer" },
+            -- Buffer-Specific Minimap Controls
+            { "<leader>nbt", "<cmd>Neominimap BufToggle<cr><cmd>ShadeToggle<cr>", desc = "Toggle minimap for current buffer" },
+            { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
+            { "<leader>nbo", "<cmd>Neominimap BufEnable<cr><cmd>ShadeOff<cr>", desc = "Enable minimap for current buffer" },
+            { "<leader>nbc", "<cmd>Neominimap BufDisable<cr><cmd>ShadeOn<cr>", desc = "Disable minimap for current buffer" },
 
-        ---Focus Controls
-        { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
-        { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
-        { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+            ---Focus Controls
+            { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
+            { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
+            { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
         },
         init = function()
             -- The following options are recommended when layout == "float"
@@ -429,6 +425,7 @@ local plugins = {
             require("bufferline").setup({})
         end,
     },
+    -- fuzzy file finder
     {
         "nvim-telescope/telescope.nvim",
         version = "*",
@@ -445,6 +442,7 @@ local plugins = {
             vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
         end,
     },
+    -- sorts telescope files on usage
     {
         "nvim-telescope/telescope-frecency.nvim",
         -- install the latest stable version
@@ -453,6 +451,7 @@ local plugins = {
             require("telescope").load_extension "frecency"
         end,
     },
+    -- easier way to choose splits
     {
         "s1n7ax/nvim-window-picker",
         name = "window-picker",
@@ -549,6 +548,7 @@ local plugins = {
             { "<leader>gg", "<cmd>Neogit<cr>", desc = "Show Neogit UI" }
         },
     },
+    -- shows scrollbar and locations of diagnostics
     {
         "dstein64/nvim-scrollview",
         opts = {},

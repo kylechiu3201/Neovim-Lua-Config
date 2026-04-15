@@ -14,6 +14,7 @@ return {
             -- add any options here
         }
     },
+    -- extends % to work with more matchups
     {
         'andymass/vim-matchup',
         init = function()
@@ -121,7 +122,7 @@ return {
     {
         "tpope/vim-fugitive",
     },
-    -- fast movements with f, t, and s
+    -- fast movements with f, t, /, and s
     {
         "folke/flash.nvim",
         event = "BufReadPost",
@@ -132,6 +133,16 @@ return {
             modes = {
                 char = {
                     -- overrides f/t to be multi-line and letter highlighting
+                    enabled = true,
+                    jump_labels = false,
+
+                    -- turns off hl group highlighting for f/t
+                    highlight = {
+                        backdrop = false,
+                    }
+                },
+                search = {
+                    -- overrides search
                     enabled = true,
                     jump_labels = false,
 
