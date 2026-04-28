@@ -629,13 +629,66 @@ local plugins = {
             })
         end
     },
-    --[[ {
+    -- Smooth scrolling
+    {
         "karb94/neoscroll.nvim",
-        opts = {},
         config = function()
-            require("neoscroll").setup({})
+            local neoscroll = require("neoscroll")
+            local neoscroll_duration = 0.30
+            local final_duration = neoscroll_duration * 850
+
+            local function jk_scroll(dir)
+                local count = vim.v.count1 * (dir == "j" and 1 or -1)
+                -- don't smooth scroll for single line movements
+                if count == 1 or count == -1 then
+                    vim.cmd("normal! " .. dir)
+                    return
+                end
+                local topline = vim.fn.line("w0")
+                local botline = vim.fn.line("w$")
+                local scrolloff = vim.o.scrolloff
+                local curline = vim.fn.line(".")
+                local target = curline+count
+                local should_scroll = false
+                if dir == "j" then
+                    -- the -3 prevents scrolling for if we pass scrolloff by 1, AKA 1 line movement
+                    if target-3 > botline-scrolloff then
+                        should_scroll = true
+                    end
+                else 
+                    -- the +3 prevents scrolling for if we pass scrolloff by 1, AKA 1 line movement
+                    if target+3 < topline+scrolloff then
+                        should_scroll = true
+                    end
+                end
+                if should_scroll then
+                    neoscroll.scroll(count, { move_cursor=true, duration=final_duration })
+                    if dir == "j" then
+                        vim.cmd("normal! zb")
+                    else
+                        vim.cmd("normal! zt")
+                    end
+                else
+                    -- weird edge case that scrolls up one too many lines
+                    if count < 0 then
+                        count = count+1
+                    end
+                    vim.cmd("normal! " .. count .. dir)
+                end
+            end
+
+            neoscroll.setup({
+                mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "zt", "zz", "zb"},
+                duration_multiplier = neoscroll_duration,
+            })
+            vim.keymap.set("n", "j", function()
+                jk_scroll("j")
+            end, { silent = true })
+            vim.keymap.set("n", "k", function()
+                jk_scroll("k")
+            end, { silent = true })
         end
-    } ]]
+    }
 }
 
 

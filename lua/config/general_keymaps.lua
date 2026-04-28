@@ -21,8 +21,8 @@ vim.keymap.set("n", "J", function()
 end, { desc="Joins the line below without moving the cursor" })
 
 -- scroll with centering
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+-- vim.keymap.set("n", "<C-d>", "<C-d>zz")
+-- vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 -- turns off highlight for search
 -- vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -35,9 +35,9 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- NOTE THAT BEHAVIOR IS DIFFERENT FOR NORMAL VS VISUAL MODE
 -- paste from clipboard
 -- TODO: Maybe find better keymap here later
-vim.keymap.set("n", "<leader>p", "\"+p", { desc="Paste from clipboard" })
+-- vim.keymap.set("n", "<leader>p", "\"+p", { desc="Paste from clipboard" })
 -- pastes without corrupting current yank
-vim.keymap.set("x", "<leader>p", [["_dP]], { desc="Paste without corrupting yank" })
+vim.keymap.set({ "n", "x" }, "<leader>p", [["_dP]], { desc="Paste without corrupting yank" })
 
 -- yank to clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc="Yank to clipboard" })
@@ -49,3 +49,7 @@ vim.keymap.set({ "n", "v" }, "<leader>D", "\"_D", { desc="Delete line without co
 
 -- visual select last paste
 vim.keymap.set("n", "<leader>v", "`[v`]", { desc="Visual select the last paste" })
+
+-- stop x from corrupting yank
+vim.keymap.set("n", "x", "\"_x", { noremap = true, silent = true })
+vim.keymap.set("x", "x", "\"_x", { noremap = true, silent = true })

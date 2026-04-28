@@ -129,6 +129,8 @@ return {
         ---@diagnostic disable-next-line: undefined-doc-name
         ---@type Flash.Config
         opts = {
+            -- TODO: issue with flash only showing some labels for certain searches
+            labels = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
             continue = false,
             modes = {
                 char = {
