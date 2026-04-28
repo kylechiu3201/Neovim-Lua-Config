@@ -2,6 +2,17 @@
 local shade_active = false
 local initialized = false
 
+-- quick visual feedback for what was just yanked
+vim.api.nvim_create_autocmd('TextYankPost', {
+    pattern = '*',
+    callback = function()
+        vim.highlight.on_yank({
+            higroup = 'IncSearch',
+            timeout = 75,
+        })
+    end,
+})
+
 local function shade_silent_toggle()
     local save_print = print
     print = function() end
@@ -127,9 +138,6 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 
-
--- TODO: disable plugins that only work for terminal
--- local should_enable_in_terminal = vim.g.vscode == nil
 
 local plugins = {
     -- VSCode color theme
@@ -607,6 +615,20 @@ local plugins = {
         vim.keymap.set("n", "<leader>go", ":DiffviewOpen<CR>", { desc="Open Diffview" }),
         vim.keymap.set("n", "<leader>gc", ":DiffviewClose<CR>", { desc="Close Diffview" }),
     },
+    -- dim unused vars, funcs, params, etc.
+    {
+        "zbirenbaum/neodim",
+        event = "LspAttach",
+        config = function()
+            require("neodim").setup({
+                hide = {
+                    virtual_text = false,
+                    signs = false,
+                    underline = false,
+                }
+            })
+        end
+    },
     --[[ {
         "karb94/neoscroll.nvim",
         opts = {},
@@ -616,9 +638,13 @@ local plugins = {
     } ]]
 }
 
--- only enable UI plugins if we're not in VSCode environment
--- for _, plugin in ipairs(plugins) do
---     plugin.enabled = should_enable_in_terminal
--- end
+
+-- TODO: disable plugins that only work for terminal
+if vim.g.vscode ~= nil then
+    -- only enable UI plugins if we're not in VSCode environment
+    for _, plugin in ipairs(plugins) do
+        plugin.enabled = false
+    end
+end
 
 return plugins
