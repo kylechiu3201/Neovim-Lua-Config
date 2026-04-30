@@ -187,7 +187,7 @@ local plugins = {
         config = function()
             vim.notify = require("notify")
             require("notify").setup({
-                timeout = 500,
+                timeout = 1000,
                 background_colour = "#000000",
             })
         end,
@@ -728,6 +728,17 @@ local plugins = {
             })
         end
     },
+    -- Shows commit message
+    {
+        "lsig/messenger.nvim",
+        config = function()
+            require("messenger").setup({
+                border = "rounded",
+                heading_hl = "#89b4fa",
+            })
+            vim.keymap.set("n", "<leader>gm", ":MessengerShow<CR>", { silent=true, desc="Shows the commit message of the current line" })
+        end
+    }
 }
 
 
