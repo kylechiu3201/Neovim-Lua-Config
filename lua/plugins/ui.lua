@@ -680,15 +680,18 @@ local plugins = {
             neoscroll.setup({
                 mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "zt", "zz", "zb"},
                 duration_multiplier = neoscroll_duration,
+                easing = "quadratic",
             })
-            vim.keymap.set("n", "j", function()
-                jk_scroll("j")
-            end, { silent = true })
-            vim.keymap.set("n", "k", function()
-                jk_scroll("k")
-            end, { silent = true })
+            vim.keymap.set("n", "j", function() jk_scroll("j") end, { silent = true })
+            vim.keymap.set("n", "k", function() jk_scroll("k") end, { silent = true })
         end
-    }
+    },
+    {
+        "luukvbaal/statuscol.nvim",
+        config = function()
+            require("statuscol").setup({})
+        end,
+    },
 }
 
 
