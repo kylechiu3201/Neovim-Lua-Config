@@ -345,7 +345,7 @@ local plugins = {
 
             --- Put your configuration here
             ---@diagnostic disable-next-line: undefined-doc-name
-            ---@type Neominimap.UserConfig 
+            ---@type Neominimap.UserConfig
             vim.g.neominimap = {
                 auto_enable = true,
             }
@@ -655,7 +655,7 @@ local plugins = {
                     if target-3 > botline-scrolloff then
                         should_scroll = true
                     end
-                else 
+                else
                     -- the +3 prevents scrolling for if we pass scrolloff by 1, AKA 1 line movement
                     if target+3 < topline+scrolloff then
                         should_scroll = true
@@ -691,6 +691,32 @@ local plugins = {
         config = function()
             require("statuscol").setup({})
         end,
+    },
+    {
+        "johnfrankmorgan/whitespace.nvim",
+        config = function ()
+            require("whitespace-nvim").setup({
+                -- configuration options and their defaults
+
+                -- `highlight` configures which highlight is used to display
+                -- trailing whitespace
+                highlight = "DiffDelete",
+
+                -- `ignored_filetypes` configures which filetypes to ignore when
+                -- displaying trailing whitespace
+                ignored_filetypes = { "TelescopePrompt", "Trouble", "help", "dashboard" },
+
+                -- `ignore_terminal` configures whether to ignore terminal buffers
+                ignore_terminal = true,
+
+                -- `return_cursor` configures if cursor should return to previous
+                -- position after trimming whitespace
+                return_cursor = true,
+            })
+
+            -- remove trailing whitespace with a keybinding
+            vim.keymap.set("n", "<leader>t", require("whitespace-nvim").trim)
+        end
     },
 }
 
