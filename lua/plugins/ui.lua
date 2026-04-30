@@ -730,15 +730,14 @@ local plugins = {
     },
     -- Shows commit message
     {
-        "lsig/messenger.nvim",
+        "rhysd/git-messenger.vim",
         config = function()
-            require("messenger").setup({
-                border = "rounded",
-                heading_hl = "#89b4fa",
-            })
-            vim.keymap.set("n", "<leader>gm", ":MessengerShow<CR>", { silent=true, desc="Shows the commit message of the current line" })
+            vim.g.git_messenger_no_default_mappings = true
+            vim.g.git_messenger_conceal_word_diff_marker = false
+            vim.g.git_messenger_floating_win_opts = { border="rounded" }
+            vim.keymap.set("n", "<leader>gm", ":GitMessenger<CR>", { silent=true, desc="Shows the commit message of the current line" })
         end
-    }
+    },
 }
 
 
