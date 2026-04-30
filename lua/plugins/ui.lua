@@ -718,6 +718,15 @@ local plugins = {
             vim.keymap.set("n", "<leader>t", require("whitespace-nvim").trim)
         end
     },
+    -- Shows context
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        config = function()
+            require("treesitter-context").setup({
+                max_lines = 1,
+            })
+        end
+    },
 }
 
 
