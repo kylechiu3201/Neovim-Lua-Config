@@ -738,6 +738,32 @@ local plugins = {
             vim.keymap.set("n", "<leader>gm", ":GitMessenger<CR>", { silent=true, desc="Shows the commit message of the current line" })
         end
     },
+    -- Show leading spaces and newlines in visual mode
+    {
+        "mcauley-penney/visual-whitespace.nvim",
+        event = "ModeChanged *:[vV\22]", -- optionally, lazy load on entering visual mode
+        -- This can go in your color scheme or in your plugin config
+        config = function()
+            require("visual-whitespace").setup({
+                match_types = {
+                    space = false,
+                    tab = false,
+                    nbsp = false,
+                    lead = true,
+                    trail = false,
+                },
+                list_chars = {
+                    lead = ".",
+                },
+                fileformat_chars = {
+                    unix = "󰘌",
+                    mac = "󰘌",
+                    dos = "󰘌",
+                }
+            })
+            vim.api.nvim_set_hl(0, "VisualNonText", { fg = "#5D5F71", bg = "#24282d"})
+        end
+    },
 }
 
 
