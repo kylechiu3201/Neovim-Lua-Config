@@ -716,7 +716,7 @@ local plugins = {
             })
 
             -- remove trailing whitespace with a keybinding
-            vim.keymap.set("n", "<leader>t", require("whitespace-nvim").trim)
+            vim.keymap.set("n", "<leader>t", require("whitespace-nvim").trim, { desc="Remove all trailing whitespaces" })
         end
     },
     -- Shows context
@@ -763,6 +763,15 @@ local plugins = {
             })
             vim.api.nvim_set_hl(0, "VisualNonText", { fg = "#5D5F71", bg = "#24282d"})
         end
+    },
+    -- Git blame viewer
+    {
+        "FabijanZulj/blame.nvim",
+        lazy = false,
+        config = function()
+            require("blame").setup({})
+            vim.keymap.set("n", "<leader>gb", ":BlameToggle<CR>", { silent=true, desc="Toggle Git blame viewer" })
+        end,
     },
 }
 
