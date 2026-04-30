@@ -104,6 +104,7 @@ local function add_labels(bufnr)
         end
     end
 
+    -- silences notifications for conflict detection
     local save_notify = vim.notify
     vim.notify = function() end
     require("resolve").detect_conflicts()
