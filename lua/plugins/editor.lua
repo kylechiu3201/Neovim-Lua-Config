@@ -176,5 +176,12 @@ return {
         config = function()
             require("numb").setup()
         end,
-    }
+    },
+    -- guess indentation style
+    {
+        "nmac427/guess-indent.nvim",
+        config = function()
+            require("guess-indent").setup({})
+        end
+    },
 }

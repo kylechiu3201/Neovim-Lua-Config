@@ -174,13 +174,6 @@ local plugins = {
         ---@type ibl.config
         opts = {},
     },
-    -- guess indentation style
-    {
-        "nmac427/guess-indent.nvim",
-        config = function()
-            require("guess-indent").setup({})
-        end
-    },
     -- notification UI
     {
         "rcarriga/nvim-notify",
