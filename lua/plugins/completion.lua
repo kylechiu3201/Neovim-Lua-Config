@@ -1,4 +1,4 @@
-return {
+local plugins = {
     -- completion engine
     {
         "saghen/blink.cmp",
@@ -71,3 +71,13 @@ return {
     --     end
     -- },
 }
+
+-- TODO: disable plugins that only work for terminal
+if vim.g.vscode ~= nil then
+    -- only enable UI plugins if we're not in VSCode environment
+    for _, plugin in ipairs(plugins) do
+        plugin.enabled = false
+    end
+end
+
+return plugins
