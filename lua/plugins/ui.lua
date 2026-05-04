@@ -1,3 +1,5 @@
+local isInTerminal = vim.g.vscode == nil
+
 -- commands for toggling shade.nvim, we assume by default it is off (lazy = true)
 local shade_active = false
 local initialized = false
@@ -70,7 +72,9 @@ end, {})
 local ns = vim.api.nvim_create_namespace("conflict_labels")
 
 local function add_labels(bufnr)
-    if not vim.api.nvim_buf_is_valid(bufnr) then return end
+    if not vim.api.nvim_buf_is_valid(bufnr) or not isInTerminal then
+        return
+    end
 
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
@@ -783,7 +787,7 @@ local plugins = {
 
 
 -- TODO: disable plugins that only work for terminal
-if vim.g.vscode ~= nil then
+if not isInTerminal then
     -- only enable UI plugins if we're not in VSCode environment
     for _, plugin in ipairs(plugins) do
         plugin.enabled = false
