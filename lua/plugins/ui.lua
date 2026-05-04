@@ -717,7 +717,20 @@ local plugins = {
         "nvim-treesitter/nvim-treesitter-context",
         config = function()
             require("treesitter-context").setup({
-                max_lines = 1,
+                separator = "━",
+                max_lines = 5,
+            })
+            -- for black context line separator
+            local function set_separator_hl_group()
+                vim.api.nvim_set_hl(0, "TreesitterContextSeparator", {
+                    fg = "#000000",
+                })
+            end
+            set_separator_hl_group()
+            -- applies hl group in case color scheme loads after this plugin
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                group = vim.api.nvim_create_augroup("MyTsContextSeparator", { clear=true }),
+                callback = set_separator_hl_group,
             })
         end
     },
