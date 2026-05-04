@@ -1,5 +1,3 @@
-local isInTerminal = vim.g.vscode == nil
-
 -- commands for toggling shade.nvim, we assume by default it is off (lazy = true)
 local shade_active = false
 local initialized = false
@@ -68,79 +66,6 @@ vim.api.nvim_create_user_command("ShadeToggle", function()
 end, {})
 
 
--- setup for adding "Ours" and "Theirs" to git conflict markers
-local ns = vim.api.nvim_create_namespace("conflict_labels")
-
-local function add_labels(bufnr)
-    if not vim.api.nvim_buf_is_valid(bufnr) or not isInTerminal then
-        return
-    end
-
-    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-
-    -- Clear previous labels
-    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-
-    local total_num_columns = vim.api.nvim_win_get_width(0)
-    local column_offset
-    if not shade_active then
-        column_offset = math.max(25, total_num_columns-35)
-    else
-        column_offset = math.max(25, total_num_columns-15)
-    end
-    for i, line in ipairs(lines) do
-        if line:match("^<<<<<<<") then
-            vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
-                virt_text = {
-                    { "← OURS  ", "ResolveOursMarker" },
-                },
-                virt_text_pos = "overlay",
-                virt_text_win_col = column_offset
-            })
-        elseif line:match("^>>>>>>>") then
-            vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
-                virt_text = {
-                    { "← THEIRS", "ResolveTheirsMarker" },
-                },
-                virt_text_pos = "overlay",
-                virt_text_win_col = column_offset
-            })
-        end
-    end
-
-    -- silences notifications for conflict detection
-    local save_notify = vim.notify
-    vim.notify = function() end
-    require("resolve").detect_conflicts()
-    vim.notify = save_notify
-end
-
--- Re-adds the git conflict marker labels after any buffer changes
-vim.api.nvim_create_autocmd(
-    {
-        "BufReadPost",
-        "BufNewFile",
-        "BufEnter",
-        "TextChanged",
-        "TextChangedI",
-        "BufWritePost",
-        "VimResized",
-        "WinResized",
-    },
-    {
-        callback = function(args)
-            add_labels(args.buf)
-        end,
-    }
-)
-
--- consumes user-defined event to trigger git resolve label redraw
-vim.api.nvim_create_autocmd("User", {
-    pattern = "ShadeToggled",
-    callback = function(args)
-        add_labels(args.buf)
-    end
-})
 
 
 
@@ -272,7 +197,90 @@ local plugins = {
     {
         "spacedentist/resolve.nvim",
         event = { "BufReadPre", "BufNewFile" },
-        opts = {},
+        config = function()
+            require("resolve").setup({})
+            -- use colors to match VSCode theme
+            -- some colors blend too much into the terminal colors
+            vim.api.nvim_set_hl(0, "ResolveOursMarker", { bg="#36776b", bold=true })
+            vim.api.nvim_set_hl(0, "ResolveTheirsMarker", { bg="#2b5d8b", bold=true })
+            -- vim.api.nvim_set_hl(0, "ResolveSeparatorMarker", { bg="#242526", bold=true })
+            -- vim.api.nvim_set_hl(0, "ResolveAncestorMarker", { bg="#313232", bold=true })
+            vim.api.nvim_set_hl(0, "ResolveOursSection", { bg="#1e3833" })
+            vim.api.nvim_set_hl(0, "ResolveTheirsSection", { bg="#1d3144" })
+            -- vim.api.nvim_set_hl(0, "ResolveAncestorSection", { bg = "#1f1f20" })
+
+            -- setup for adding "Ours" and "Theirs" to git conflict markers
+            local ns = vim.api.nvim_create_namespace("conflict_labels")
+
+            local function add_labels(bufnr)
+                if not vim.api.nvim_buf_is_valid(bufnr) then return end
+
+                local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+                -- Clear previous labels
+                vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+
+                local total_num_columns = vim.api.nvim_win_get_width(0)
+                local column_offset
+                if not shade_active then
+                    column_offset = math.max(25, total_num_columns-35)
+                else
+                    column_offset = math.max(25, total_num_columns-15)
+                end
+                for i, line in ipairs(lines) do
+                    if line:match("^<<<<<<<") then
+                        vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
+                            virt_text = {
+                                { "← OURS  ", "ResolveOursMarker" },
+                            },
+                            virt_text_pos = "overlay",
+                            virt_text_win_col = column_offset
+                        })
+                    elseif line:match("^>>>>>>>") then
+                        vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
+                            virt_text = {
+                                { "← THEIRS", "ResolveTheirsMarker" },
+                            },
+                            virt_text_pos = "overlay",
+                            virt_text_win_col = column_offset
+                        })
+                    end
+                end
+
+                -- silences notifications for conflict detection
+                local save_notify = vim.notify
+                vim.notify = function() end
+                require("resolve").detect_conflicts()
+                vim.notify = save_notify
+            end
+
+            -- Re-adds the git conflict marker labels after any buffer changes
+            vim.api.nvim_create_autocmd(
+                {
+                    "BufReadPost",
+                    "BufNewFile",
+                    "BufEnter",
+                    "TextChanged",
+                    "TextChangedI",
+                    "BufWritePost",
+                    "VimResized",
+                    "WinResized",
+                },
+                {
+                    callback = function(args)
+                        add_labels(args.buf)
+                    end,
+                }
+            )
+
+            -- consumes user-defined event to trigger git resolve label redraw
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "ShadeToggled",
+                callback = function(args)
+                    add_labels(args.buf)
+                end
+            })
+        end
     },
     -- better syntax highlighting detection
     {
@@ -787,7 +795,7 @@ local plugins = {
 
 
 -- TODO: disable plugins that only work for terminal
-if not isInTerminal then
+if vim.g.vscode ~= nil then
     -- only enable UI plugins if we're not in VSCode environment
     for _, plugin in ipairs(plugins) do
         plugin.enabled = false
