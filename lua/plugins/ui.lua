@@ -284,9 +284,14 @@ local plugins = {
     },
     -- better syntax highlighting detection
     {
-        'nvim-treesitter/nvim-treesitter',
+        "nvim-treesitter/nvim-treesitter",
         lazy = false,
-        build = ':TSUpdate'
+        build = ":TSUpdate",
+        config = function()
+            -- require("nvim-treesitter").setup({
+            --     -- auto_install = true,
+            -- })
+        end,
     },
     -- additional treesitter for text objects
     {
@@ -790,6 +795,29 @@ local plugins = {
             require("blame").setup({})
             vim.keymap.set("n", "<leader>gb", ":BlameToggle<CR>", { silent=true, desc="Toggle Git blame viewer" })
         end,
+    },
+    -- rainbow parentheses coloring
+    {
+        "hiphish/rainbow-delimiters.nvim",
+        config = function()
+            require("rainbow-delimiters.setup").setup({})
+            vim.opt.termguicolors = true
+            vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg="#ff7c72" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg="#ffd800" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg="#169fff" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterOrange", { fg="#ce9178" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterGreen", { fg="#4ec9b0" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg="#da70d6" })
+            vim.api.nvim_set_hl(0, "RainbowDelimiterCyan", { fg="#a5d6ff" })
+
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg="#ff7c72", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg="#ffd800", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg="#169fff", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterOrange", { fg="#ce9178", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterGreen", { fg="#4ec9b0", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg="#da70d6", bold=true })
+            -- vim.api.nvim_set_hl(0, "RainbowDelimiterCyan", { fg="#a5d6ff", bold=true })
+        end
     },
 }
 
