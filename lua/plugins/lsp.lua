@@ -1,7 +1,11 @@
+-- TODO: disable plugins that only work for terminal
+local shouldEnablePlugin = vim.g.vscode == nil
+
 local plugins = {
     -- LSP config
     {
         "neovim/nvim-lspconfig",
+        enabled = shouldEnablePlugin,
     },
     -- installer for LSPs, linters, and formatters
     {
@@ -20,6 +24,7 @@ local plugins = {
                 PATH = "prepend",
             })
         end,
+        enabled = shouldEnablePlugin,
     },
     -- auto-install for LSPs
     {
@@ -57,10 +62,12 @@ local plugins = {
                 }
             })
         end,
+        enabled = shouldEnablePlugin,
     },
     -- additional list of LSPs, linters, and formatters
     {
         "mason-org/mason-registry",
+        enabled = shouldEnablePlugin,
     },
     -- linter
     {
@@ -100,7 +107,8 @@ local plugins = {
                     end,
                 }
             )
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
     -- auto-installs for linters
     {
@@ -109,7 +117,8 @@ local plugins = {
             require("mason-nvim-lint").setup({
                 automatic_installation = true,
             })
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
     -- formatter
     {
@@ -134,13 +143,15 @@ local plugins = {
             -- TODO: fix behaviors with formatting and stuff like tab vs space
             vim.keymap.set("n", "<leader>af", ":lua require(\"conform\").format({ async = false, lsp_fallback = true, })<CR>", { silent = true, desc="Auto-format the current file" })
         end,
+        enabled = shouldEnablePlugin,
     },
     -- auto-install for formatters
     {
         "zapling/mason-conform.nvim",
         config = function()
             require("mason-conform").setup({})
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
     {
         "hedyhli/outline.nvim",
@@ -148,6 +159,7 @@ local plugins = {
             vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
             require("outline").setup({})
         end,
+        enabled = shouldEnablePlugin,
     },
     -- shows number of references, etc.
     {
@@ -166,7 +178,8 @@ local plugins = {
                 },
                 vt_position = "end_of_line",
             })
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
     -- shows the actual error/warning text when the cursor is on the line in question
     {
@@ -201,6 +214,7 @@ local plugins = {
             })
             vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
         end,
+        enabled = shouldEnablePlugin,
     },
     -- show diagnostics window for errors/warnings in the entire file
     {
@@ -239,6 +253,7 @@ local plugins = {
                 desc = "Quickfix List (Trouble)",
             },
         },
+        enabled = shouldEnablePlugin,
     },
     -- LSP status notifications
     {
@@ -250,7 +265,8 @@ local plugins = {
         config = function()
             require("telescope").load_extension("fidget")
             require("fidget").setup({})
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
     -- multiple LSP UI components
     -- TODO: figure out keymaps and also if we need goto-preview or not
@@ -268,6 +284,7 @@ local plugins = {
             vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
             vim.keymap.set("n", "<leader>ca", ":Lspsaga code_action<CR>", { desc="Open code action ", silent=true })
         end,
+        enabled = shouldEnablePlugin,
     },
     -- preview functions, references, etc.
     {
@@ -279,16 +296,9 @@ local plugins = {
             require("goto-preview").setup({
                 default_mappings = true,
             })
-        end
+        end,
+        enabled = shouldEnablePlugin,
     },
 }
-
--- TODO: disable plugins that only work for terminal
-if vim.g.vscode ~= nil then
-    -- only enable UI plugins if we're not in VSCode environment
-    for _, plugin in ipairs(plugins) do
-        plugin.enabled = false
-    end
-end
 
 return plugins

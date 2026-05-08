@@ -356,6 +356,7 @@ local plugins = {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
+            -- TODO: the ascii thing no longer works
             local function char_info_under_cursor()
                 local _, col = table.unpack(vim.api.nvim_win_get_cursor(0))
                 local line = vim.api.nvim_get_current_line()
@@ -576,6 +577,7 @@ local plugins = {
                 diagnostics_info_symbol   = "",
                 diagnostics_hint_symbol   = "",
             })
+            -- TODO: fix scrollbar color probably gets overwritten
             vim.cmd("highlight! ScrollView guifg=#b0b8c4 guibg=#555b66")
         end
     },
@@ -686,12 +688,14 @@ local plugins = {
             vim.keymap.set("n", "k", function() jk_scroll("k") end, { silent = true })
         end
     },
+    -- Allows for larger gutter so signs don't overlap
     {
         "luukvbaal/statuscol.nvim",
         config = function()
             require("statuscol").setup({})
         end,
     },
+    -- highlights and removes trailing whitespaces
     {
         "johnfrankmorgan/whitespace.nvim",
         config = function ()

@@ -1,9 +1,13 @@
-return {
+-- TODO: disable plugins that only work for terminal
+local shouldEnablePlugin = vim.g.vscode == nil
+
+local plugins = {
     -- auto pairing for [{("")}], etc.
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
-        config = true
+        config = true,
+        enabled = shouldEnablePlugin,
         -- use opts = {} for passing setup options
         -- this is equivalent to setup({}) function
     },
@@ -49,7 +53,7 @@ return {
             require("nvim-comment-frame").setup()
         end
     },
-    -- resetore last cursor position since file close
+    -- restore last cursor position since file close
     {
         "nxhung2304/lastplace.nvim",
         config = function()
@@ -248,3 +252,5 @@ return {
         end
     }
 }
+
+return plugins
